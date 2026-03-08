@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Weather Control Panel</title>
+
+    <link rel="stylesheet" href="/static/style.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+
+  <body>
+    <h1>WEATHER CONTROL PANEL</h1>
+
+    <div class="cidade">
+      <input
+        type="text"
+        id="cidade"
+        list="lista-cidades"
+        placeholder="Digite o nome da cidade"
+      />
+      <datalist id="lista-cidades"></datalist>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Temperatura</h3>
+        <p id="temp"></p>
+      </div>
+
+      <div class="card">
+        <h3>Umidade</h3>
+        <p id="umidade"></p>
+      </div>
+
+      <div class="card">
+        <h3>Condição</h3>
+        <img id="icone" />
+      </div>
+    </div>
+
+    <div class="charts">
+      <canvas id="tempChart"></canvas>
+      <canvas id="humChart"></canvas>
+    </div>
+
+    <h2>Previsão para 5 dias</h2>
+
+    <div id="forecast"></div>
+
+    <div id="updateAnimation"></div>
+
+    <script src="/static/script.js"></script>
+  </body>
+</html>
