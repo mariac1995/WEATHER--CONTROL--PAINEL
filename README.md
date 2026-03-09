@@ -36,7 +36,7 @@ cd WEATHER--CONTROL--PAINEL
 2. Crie um ambiente virtual (opcional mas recomendado):
 
 ```bash
-python -m venv venv
+python -m venv .venv
 source venv/bin/activate  # Linux/Mac
 # ou
 venv\Scripts\activate  # Windows
