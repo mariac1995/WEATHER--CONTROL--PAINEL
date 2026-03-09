@@ -1,8 +1,12 @@
-# Python
+# Python bytecode
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Compiled extensions
 *.so
+
+# Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -20,12 +24,13 @@ wheels/
 .installed.cfg
 *.egg
 
-# Virtual Environment
+# Virtual Environments
+.venv/
 venv/
 env/
 ENV/
 
-# IDE
+# IDEs
 .vscode/
 .idea/
 *.swp
@@ -36,10 +41,12 @@ ENV/
 .env
 .env.local
 
-# OS
+# OS generated files
 .DS_Store
 Thumbs.db
 
-# Generated images (optional - uncomment if you want to ignore generated images)
-# images/generated-*
+# Images / generated files (opcional)
+# static/images/generated-*
 
+# Logs
+*.log
