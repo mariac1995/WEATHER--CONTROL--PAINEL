@@ -47,5 +47,6 @@ Thumbs.db
 
 # Images / generated files (opcional)
 # static/images/generated-*
+
 # Logs
 *.log
