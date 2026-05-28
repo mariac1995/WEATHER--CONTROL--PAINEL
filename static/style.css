@@ -56,6 +56,11 @@ h2 {
   margin: 0;
 }
 
+.card #condicao {
+  font-size: 1.1em;
+  text-transform: capitalize;
+}
+
 .card:hover {
   transform: translateY(-10px);
   box-shadow: 0 0 25px rgba(0, 180, 255, 0.6);
@@ -63,7 +68,7 @@ h2 {
 
 .charts {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 20px;
   width: 80%;
   margin: auto;

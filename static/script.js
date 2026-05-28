@@ -1,4 +1,8 @@
-const socket = new WebSocket("ws://localhost:5000/ws");
+const socketProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+const socketHost = ["5500", "5501"].includes(window.location.port)
+  ? "localhost:5000"
+  : window.location.host;
+const socket = new WebSocket(`${socketProtocol}//${socketHost}/ws`);
 
 const tempChart = new Chart(document.getElementById("tempChart"), {
   type: "line",
@@ -78,6 +82,8 @@ socket.onmessage = function (event) {
 
   document.getElementById("icone").src =
     "https://openweathermap.org/img/wn/" + data.icone + "@2x.png";
+  document.getElementById("icone").alt = data.condicao;
+  document.getElementById("condicao").innerText = data.condicao;
 
   let labels = [];
   let temps = [];

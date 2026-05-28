@@ -4,7 +4,7 @@ import requests
 import json
 import time
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=".")
 sock = Sock(app)
 
 API_KEY = "74cb4ad5057ea96dff6d0bc51ea7323b"
@@ -45,6 +45,7 @@ def pegar_clima(cidade):
         "temp": atual["main"]["temp"],
         "umidade": atual["main"]["humidity"],
         "icone": atual["weather"][0]["icon"],
+        "condicao": atual["weather"][0]["description"],
         "horas": previsoes_horas,
         "dias": previsao_5dias[:5]
     }
