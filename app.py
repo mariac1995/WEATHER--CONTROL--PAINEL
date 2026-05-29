@@ -1,13 +1,19 @@
 from flask import Flask, render_template
 from flask_sock import Sock
+import os
 import requests
 import json
-import time
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 app = Flask(__name__, template_folder=".")
 sock = Sock(app)
 
-API_KEY = "74cb4ad5057ea96dff6d0bc51ea7323b"
+API_KEY = os.environ.get("OPENWEATHER_API_KEY")
 
 @app.route("/")
 def index():
@@ -15,10 +21,16 @@ def index():
 
 
 def pegar_clima(cidade):
+    if not API_KEY:
+        raise RuntimeError("OPENWEATHER_API_KEY nao foi configurada.")
 
     url = f"https://api.openweathermap.org/data/2.5/forecast?q={cidade}&appid={API_KEY}&units=metric&lang=pt_br"
-    r = requests.get(url)
+    r = requests.get(url, timeout=10)
+    r.raise_for_status()
     dados = r.json()
+
+    if "list" not in dados:
+        raise ValueError("Nao foi possivel encontrar previsao para essa cidade.")
 
     previsoes_horas = []
     previsao_5dias = []
@@ -55,8 +67,11 @@ def pegar_clima(cidade):
 def ws(ws):
     while True:
         cidade = ws.receive()
-        clima = pegar_clima(cidade)
-        ws.send(json.dumps(clima))
+        try:
+            clima = pegar_clima(cidade)
+            ws.send(json.dumps(clima))
+        except Exception as erro:
+            ws.send(json.dumps({"erro": str(erro)}))
 
 
 if __name__ == "__main__":

@@ -77,6 +77,13 @@ const humChart = new Chart(document.getElementById("humChart"), {
 socket.onmessage = function (event) {
   const data = JSON.parse(event.data);
 
+  if (data.erro) {
+    document.getElementById("temp").innerText = "--";
+    document.getElementById("umidade").innerText = "--";
+    document.getElementById("condicao").innerText = data.erro;
+    return;
+  }
+
   document.getElementById("temp").innerText = data.temp + " °C";
   document.getElementById("umidade").innerText = data.umidade + " %";
 
