@@ -151,21 +151,27 @@ h2 {
 }
 
 #status {
-  min-height: 24px;
+  min-height: 36px;
   width: min(620px, 100%);
   margin: 0 auto 16px;
+  padding: 8px 14px;
+  border-radius: 8px;
   font-weight: bold;
+  line-height: 1.25;
 }
 
 #status.loading {
+  background: rgba(255, 188, 88, 0.12);
   color: #ffbc58;
 }
 
 #status.success {
+  background: rgba(0, 255, 204, 0.1);
   color: #00ffcc;
 }
 
 #status.error {
+  background: rgba(255, 123, 123, 0.14);
   color: #ff7b7b;
 }
 

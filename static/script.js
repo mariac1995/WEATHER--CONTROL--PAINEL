@@ -2,7 +2,10 @@ const socketProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
 const socketHost = ["5500", "5501"].includes(window.location.port)
   ? "localhost:5000"
   : window.location.host;
-const socket = new WebSocket(`${socketProtocol}//${socketHost}/ws`);
+const socketUrl = `${socketProtocol}//${socketHost}/ws`;
+let socket = null;
+let reconnectAttempts = 0;
+let lastRequestedCity = "Belo Horizonte";
 const cidadeInput = document.getElementById("cidade");
 const buscarButton = document.getElementById("buscar");
 const listaCidades = document.getElementById("lista-cidades");
@@ -123,28 +126,43 @@ const humChart = new Chart(document.getElementById("humChart"), {
   },
 });
 
-socket.onmessage = function (event) {
-  const data = JSON.parse(event.data);
+function connectSocket() {
+  socket = new WebSocket(socketUrl);
 
-  if (data.erro) {
-    showError(data.erro);
-    return;
-  }
+  socket.onopen = () => {
+    reconnectAttempts = 0;
+    buscarCidade(lastRequestedCity);
+  };
 
-  renderWeather(data);
-};
+  socket.onmessage = function (event) {
+    const data = JSON.parse(event.data);
 
-socket.onopen = () => {
-  buscarCidade("Belo Horizonte");
-};
+    if (data.erro) {
+      showError(data.erro);
+      return;
+    }
 
-socket.onerror = () => {
-  showError("Nao foi possivel conectar ao servidor Flask.");
-};
+    renderWeather(data);
+  };
 
-socket.onclose = () => {
-  showError("Conexao com o servidor encerrada.");
-};
+  socket.onerror = () => {
+    showError("Nao foi possivel conectar ao servidor Flask.");
+  };
+
+  socket.onclose = () => {
+    scheduleReconnect();
+  };
+}
+
+function scheduleReconnect() {
+  reconnectAttempts += 1;
+  const delay = Math.min(1000 * reconnectAttempts, 5000);
+
+  statusMessage.innerText = `Conexao perdida. Tentando reconectar em ${delay / 1000}s...`;
+  statusMessage.className = "error";
+
+  setTimeout(connectSocket, delay);
+}
 
 cidadeInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
@@ -164,8 +182,10 @@ function buscarCidade(cidade) {
     return;
   }
 
+  lastRequestedCity = cidadeLimpa;
+
   if (socket.readyState !== WebSocket.OPEN) {
-    showError("Servidor ainda nao esta conectado. Tente novamente em alguns segundos.");
+    showError("Servidor ainda nao esta conectado. A busca sera refeita ao reconectar.");
     return;
   }
 
@@ -251,6 +271,8 @@ function clearCharts() {
   humChart.data.datasets[0].data = [];
   humChart.update();
 }
+
+connectSocket();
 
 fetch("https://servicodados.ibge.gov.br/api/v1/localidades/municipios")
   .then((response) => response.json())

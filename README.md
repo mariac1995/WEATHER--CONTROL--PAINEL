@@ -14,6 +14,9 @@ Um painel de controle meteorológico interativo construído com Flask, que exibe
 - **Previsão de 5 Dias**: Previsão meteorológica para os próximos 5 dias
 - **Interface em Português**: Totalmente traduzido para português brasileiro
 - **WebSocket**: Comunicação em tempo real para atualizações rápidas
+- **Cache Simples**: Evita chamadas repetidas para a OpenWeatherMap na mesma cidade
+- **Reconexão Automática**: Tenta reconectar o WebSocket se a conexão cair
+- **Tratamento de Erros**: Mostra mensagens claras quando a busca falha
 
 ## Tecnologias
 
@@ -79,13 +82,18 @@ http://127.0.0.1:5000
 ```
 weather-control-painel/
 ├── app.py                 # Aplicativo principal Flask
-├── index.html             # Pagina principal
 ├── requirements.txt       # Dependências Python
 ├── .env.example           # Modelo das variaveis de ambiente
-└── static/
-    ├── style.css         # Estilos CSS
-    ├── script.js         # JavaScript do frontend
-    └── images/           # Imagens
+├── services/
+│   └── clima_service.py   # Logica de busca e tratamento da OpenWeatherMap
+├── templates/
+│   └── index.html         # Pagina principal renderizada pelo Flask
+├── static/
+│   ├── style.css          # Estilos CSS
+│   ├── script.js          # JavaScript do frontend
+│   └── images/            # Imagens
+└── tests/
+    └── test_clima_service.py
 ```
 
 ## Configuracao
@@ -105,10 +113,18 @@ O arquivo `.env` esta no `.gitignore`, entao ele nao sera enviado para o reposit
 ## Como Usar
 
 1. Na página inicial, digite o nome de uma cidade no campo de busca
-2. Pressione Enter ou aguarde a consulta automática
+2. Clique em Buscar ou pressione Enter
 3. Visualize os dados meteorológicos atuais
 4. Observe os gráficos de temperatura e umidade
 5. Veja a previsão para os próximos 5 dias
+
+## Testes
+
+Execute os testes automatizados com:
+
+```bash
+python -m unittest discover -s tests
+```
 
 ## Licenca
 
