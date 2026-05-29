@@ -20,6 +20,7 @@
         list="lista-cidades"
         placeholder="Digite o nome da cidade"
       />
+      <button id="buscar" type="button">Buscar</button>
       <datalist id="lista-cidades"></datalist>
     </div>
 
@@ -36,16 +37,22 @@
         <p id="umidade"></p>
       </div>
 
-      <div class="card">
+      <div class="card condition-card">
         <h3>Condição</h3>
-        <img id="icone" />
+        <div class="condition-icon">
+          <img id="icone" />
+        </div>
         <p id="condicao"></p>
       </div>
     </div>
 
     <div class="charts">
-      <canvas id="tempChart"></canvas>
-      <canvas id="humChart"></canvas>
+      <div class="chart-panel">
+        <canvas id="tempChart"></canvas>
+      </div>
+      <div class="chart-panel">
+        <canvas id="humChart"></canvas>
+      </div>
     </div>
 
     <h2>Previsão para 5 dias</h2>

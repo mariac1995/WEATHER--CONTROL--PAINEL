@@ -50,12 +50,6 @@ h2 {
     box-shadow 0.3s ease;
 }
 
-.card img {
-  width: 72px;
-  height: 72px;
-  object-fit: contain;
-}
-
 .card h3 {
   color: #ffbc58;
   font-family: "Rajdhani", sans-serif;
@@ -77,6 +71,30 @@ h2 {
   text-transform: capitalize;
 }
 
+.condition-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.condition-icon {
+  display: grid;
+  place-items: center;
+  width: 86px;
+  height: 86px;
+  margin: 4px auto 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 188, 88, 0.24), rgba(0, 200, 255, 0.08));
+  box-shadow: 0 0 18px rgba(255, 188, 88, 0.22);
+}
+
+.condition-icon img {
+  width: 76px;
+  height: 76px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.25));
+}
+
 .card:hover {
   transform: translateY(-10px);
   box-shadow: 0 0 25px rgba(0, 180, 255, 0.6);
@@ -85,14 +103,23 @@ h2 {
 .charts {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 20px;
+  gap: 32px;
   width: min(1080px, 100%);
   margin: auto;
 }
 
-.charts canvas {
+.chart-panel {
+  position: relative;
   width: 100% !important;
-  height: 320px !important;
+  min-width: 0;
+  height: 360px !important;
+  overflow: hidden;
+}
+
+.charts canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 #forecast {
@@ -163,10 +190,18 @@ h2 {
   }
 }
 
-.cidade input[type="text"] {
+.cidade {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
   width: min(680px, 100%);
+  margin: 20px auto;
+}
+
+.cidade input[type="text"] {
+  flex: 1;
+  min-width: 0;
   padding: 10px;
-  margin: 20px 0;
   border-radius: 20px; /* Bordas arredondadas */
   border: none; /* Sem borda */
   background: rgba(255, 255, 255, 0.2); /* Fundo branco semitransparente */
@@ -176,6 +211,26 @@ h2 {
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
+}
+
+.cidade button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 20px;
+  background: #ffbc58;
+  color: #081522;
+  cursor: pointer;
+  font-weight: bold;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+
+.cidade button:hover {
+  background: #ffd08a;
+  transform: translateY(-4px);
+  box-shadow: 0 0 25px rgba(255, 188, 88, 0.6);
 }
 
 .cidade input[type="text"]::placeholder {
@@ -202,6 +257,14 @@ h2 {
     gap: 14px;
   }
 
+  .cidade {
+    flex-direction: column;
+  }
+
+  .cidade button {
+    width: 100%;
+  }
+
   .card {
     padding: 16px;
   }
@@ -210,8 +273,8 @@ h2 {
     font-size: 2rem;
   }
 
-  .charts canvas {
-    height: 260px !important;
+  .chart-panel {
+    height: 380px !important;
   }
 
   #forecast {
@@ -220,6 +283,14 @@ h2 {
 }
 
 @media (max-width: 420px) {
+  .charts {
+    gap: 40px;
+  }
+
+  .chart-panel {
+    height: 400px !important;
+  }
+
   #forecast {
     grid-template-columns: 1fr;
   }

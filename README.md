@@ -2,6 +2,10 @@
 
 Um painel de controle meteorológico interativo construído com Flask, que exibe informações climáticas em tempo real usando a API OpenWeatherMap.
 
+## Preview
+
+![Preview do Weather Control Panel](./static/images/preview.png)
+
 ## Funcionalidades
 
 - **Consulta por Cidade**: Digite o nome de qualquer cidade para obter informações meteorológicas

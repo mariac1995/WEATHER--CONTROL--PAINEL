@@ -4,6 +4,7 @@ const socketHost = ["5500", "5501"].includes(window.location.port)
   : window.location.host;
 const socket = new WebSocket(`${socketProtocol}//${socketHost}/ws`);
 const cidadeInput = document.getElementById("cidade");
+const buscarButton = document.getElementById("buscar");
 const listaCidades = document.getElementById("lista-cidades");
 const statusMessage = document.getElementById("status");
 const tempElement = document.getElementById("temp");
@@ -11,6 +12,10 @@ const umidadeElement = document.getElementById("umidade");
 const iconeElement = document.getElementById("icone");
 const condicaoElement = document.getElementById("condicao");
 const forecast = document.getElementById("forecast");
+const chartTextStyle = {
+  color: "white",
+  font: { size: 14, weight: "bold" },
+};
 
 const tempChart = new Chart(document.getElementById("tempChart"), {
   type: "line",
@@ -31,18 +36,34 @@ const tempChart = new Chart(document.getElementById("tempChart"), {
   options: {
     responsive: true,
     maintainAspectRatio: false,
+    layout: {
+      padding: 12,
+    },
     plugins: {
       legend: {
-        labels: { color: "white", font: { size: 14, weight: "bold" } },
+        labels: {
+          ...chartTextStyle,
+          boxWidth: 34,
+          padding: 18,
+        },
       },
     },
     scales: {
       x: {
-        ticks: { color: "white", font: { weight: "bold" } },
+        ticks: {
+          ...chartTextStyle,
+          autoSkip: true,
+          maxTicksLimit: 5,
+          maxRotation: 0,
+          minRotation: 0,
+        },
         grid: { color: "rgba(255,255,255,0.1)" },
       },
       y: {
-        ticks: { color: "white", font: { weight: "bold" } },
+        ticks: {
+          ...chartTextStyle,
+          maxTicksLimit: 6,
+        },
         grid: { color: "rgba(255,255,255,0.1)" },
       },
     },
@@ -68,18 +89,34 @@ const humChart = new Chart(document.getElementById("humChart"), {
   options: {
     responsive: true,
     maintainAspectRatio: false,
+    layout: {
+      padding: 12,
+    },
     plugins: {
       legend: {
-        labels: { color: "white", font: { size: 14, weight: "bold" } },
+        labels: {
+          ...chartTextStyle,
+          boxWidth: 34,
+          padding: 18,
+        },
       },
     },
     scales: {
       x: {
-        ticks: { color: "white", font: { weight: "bold" } },
+        ticks: {
+          ...chartTextStyle,
+          autoSkip: true,
+          maxTicksLimit: 5,
+          maxRotation: 0,
+          minRotation: 0,
+        },
         grid: { color: "rgba(255,255,255,0.1)" },
       },
       y: {
-        ticks: { color: "white", font: { weight: "bold" } },
+        ticks: {
+          ...chartTextStyle,
+          maxTicksLimit: 6,
+        },
         grid: { color: "rgba(255,255,255,0.1)" },
       },
     },
@@ -109,7 +146,13 @@ socket.onclose = () => {
   showError("Conexao com o servidor encerrada.");
 };
 
-cidadeInput.addEventListener("change", () => {
+cidadeInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    buscarCidade(cidadeInput.value);
+  }
+});
+
+buscarButton.addEventListener("click", () => {
   buscarCidade(cidadeInput.value);
 });
 
