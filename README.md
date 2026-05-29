@@ -2,7 +2,7 @@
 
 Um painel de controle meteorológico interativo construído com Flask, que exibe informações climáticas em tempo real usando a API OpenWeatherMap.
 
-## 🚀 Funcionalidades
+## Funcionalidades
 
 - **Consulta por Cidade**: Digite o nome de qualquer cidade para obter informações meteorológicas
 - **Dados em Tempo Real**: Temperatura atual, umidade e condição climática
@@ -11,7 +11,7 @@ Um painel de controle meteorológico interativo construído com Flask, que exibe
 - **Interface em Português**: Totalmente traduzido para português brasileiro
 - **WebSocket**: Comunicação em tempo real para atualizações rápidas
 
-## 🛠️ Tecnologias
+## Tecnologias
 
 - **Backend**: Flask (Python)
 - **Frontend**: HTML, CSS, JavaScript
@@ -19,12 +19,12 @@ Um painel de controle meteorológico interativo construído com Flask, que exibe
 - **Gráficos**: Chart.js
 - **API**: OpenWeatherMap
 
-## 📋 Pré-requisitos
+## Pre-requisitos
 
 - Python 3.8+
 - Chave da API OpenWeatherMap
 
-## ⚙️ Instalação
+## Instalacao
 
 1. Clone o repositório:
 
@@ -48,44 +48,57 @@ venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 ```
 
-4. Execute o aplicativo:
+4. Configure a chave da OpenWeatherMap:
+
+Crie um arquivo chamado `.env` na raiz do projeto e adicione sua chave:
+
+```env
+OPENWEATHER_API_KEY=sua_chave_aqui
+```
+
+Voce pode usar o arquivo `.env.example` como modelo. O arquivo `.env` fica apenas na sua maquina e nao deve ser enviado para o GitHub.
+
+5. Execute o aplicativo:
 
 ```bash
 python app.py
 ```
 
-5. Abra o navegador e vá para:
+6. Abra o navegador e va para:
 
 ```
 http://127.0.0.1:5000
 ```
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 weather-control-painel/
 ├── app.py                 # Aplicativo principal Flask
+├── index.html             # Pagina principal
 ├── requirements.txt       # Dependências Python
-├── templates/
-│   └── index.html        # Página principal
+├── .env.example           # Modelo das variaveis de ambiente
 └── static/
     ├── style.css         # Estilos CSS
     ├── script.js         # JavaScript do frontend
     └── images/           # Imagens
 ```
 
-## 🔧 Configuração
+## Configuracao
 
-A API Key do OpenWeatherMap está configurada no arquivo `app.py`. Para usar sua própria chave:
+A chave da OpenWeatherMap deve ser configurada por variavel de ambiente, para evitar que ela fique exposta no codigo.
 
 1. Obtenha uma chave gratuita em: https://openweathermap.org/api
-2. Substitua o valor de `API_KEY` no arquivo `app.py`:
+2. Crie um arquivo `.env` na raiz do projeto
+3. Adicione a variavel:
 
-```python
-API_KEY = "sua_chave_aqui"
+```env
+OPENWEATHER_API_KEY=sua_chave_aqui
 ```
 
-## 📱 Como Usar
+O arquivo `.env` esta no `.gitignore`, entao ele nao sera enviado para o repositorio. Envie apenas o `.env.example`, que serve como exemplo sem conter a chave real.
+
+## Como Usar
 
 1. Na página inicial, digite o nome de uma cidade no campo de busca
 2. Pressione Enter ou aguarde a consulta automática
@@ -93,10 +106,10 @@ API_KEY = "sua_chave_aqui"
 4. Observe os gráficos de temperatura e umidade
 5. Veja a previsão para os próximos 5 dias
 
-## 📄 Licença
+## Licenca
 
 Este projeto é apenas para fins educacionais.
 
-## 👤 Autor
+## Autor
 
 Maria C.
