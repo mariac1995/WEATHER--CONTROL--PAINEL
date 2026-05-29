@@ -24,8 +24,16 @@ def pegar_clima(cidade):
     if not API_KEY:
         raise RuntimeError("OPENWEATHER_API_KEY nao foi configurada.")
 
+    cidade = cidade.strip()
+    if not cidade:
+        raise ValueError("Digite o nome de uma cidade.")
+
     url = f"https://api.openweathermap.org/data/2.5/forecast?q={cidade}&appid={API_KEY}&units=metric&lang=pt_br"
     r = requests.get(url, timeout=10)
+    if r.status_code == 404:
+        raise ValueError("Cidade nao encontrada. Verifique o nome e tente novamente.")
+    if r.status_code == 401:
+        raise RuntimeError("Chave da OpenWeather invalida ou sem permissao.")
     r.raise_for_status()
     dados = r.json()
 

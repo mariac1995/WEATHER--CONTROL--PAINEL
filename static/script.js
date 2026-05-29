@@ -3,6 +3,14 @@ const socketHost = ["5500", "5501"].includes(window.location.port)
   ? "localhost:5000"
   : window.location.host;
 const socket = new WebSocket(`${socketProtocol}//${socketHost}/ws`);
+const cidadeInput = document.getElementById("cidade");
+const listaCidades = document.getElementById("lista-cidades");
+const statusMessage = document.getElementById("status");
+const tempElement = document.getElementById("temp");
+const umidadeElement = document.getElementById("umidade");
+const iconeElement = document.getElementById("icone");
+const condicaoElement = document.getElementById("condicao");
+const forecast = document.getElementById("forecast");
 
 const tempChart = new Chart(document.getElementById("tempChart"), {
   type: "line",
@@ -21,6 +29,8 @@ const tempChart = new Chart(document.getElementById("tempChart"), {
     ],
   },
   options: {
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         labels: { color: "white", font: { size: 14, weight: "bold" } },
@@ -56,6 +66,8 @@ const humChart = new Chart(document.getElementById("humChart"), {
     ],
   },
   options: {
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         labels: { color: "white", font: { size: 14, weight: "bold" } },
@@ -78,19 +90,79 @@ socket.onmessage = function (event) {
   const data = JSON.parse(event.data);
 
   if (data.erro) {
-    document.getElementById("temp").innerText = "--";
-    document.getElementById("umidade").innerText = "--";
-    document.getElementById("condicao").innerText = data.erro;
+    showError(data.erro);
     return;
   }
 
-  document.getElementById("temp").innerText = data.temp + " °C";
-  document.getElementById("umidade").innerText = data.umidade + " %";
+  renderWeather(data);
+};
 
-  document.getElementById("icone").src =
+socket.onopen = () => {
+  buscarCidade("Belo Horizonte");
+};
+
+socket.onerror = () => {
+  showError("Nao foi possivel conectar ao servidor Flask.");
+};
+
+socket.onclose = () => {
+  showError("Conexao com o servidor encerrada.");
+};
+
+cidadeInput.addEventListener("change", () => {
+  buscarCidade(cidadeInput.value);
+});
+
+function buscarCidade(cidade) {
+  const cidadeLimpa = cidade.trim();
+
+  if (!cidadeLimpa) {
+    showError("Digite o nome de uma cidade.");
+    return;
+  }
+
+  if (socket.readyState !== WebSocket.OPEN) {
+    showError("Servidor ainda nao esta conectado. Tente novamente em alguns segundos.");
+    return;
+  }
+
+  setLoading(cidadeLimpa);
+  socket.send(cidadeLimpa);
+}
+
+function setLoading(cidade) {
+  statusMessage.innerText = `Buscando previsao para ${cidade}...`;
+  statusMessage.className = "loading";
+  tempElement.innerText = "--";
+  umidadeElement.innerText = "--";
+  iconeElement.removeAttribute("src");
+  iconeElement.removeAttribute("alt");
+  condicaoElement.innerText = "Carregando...";
+  forecast.innerHTML = '<p class="forecast-status">Carregando previsao...</p>';
+}
+
+function showError(message) {
+  statusMessage.innerText = message;
+  statusMessage.className = "error";
+  tempElement.innerText = "--";
+  umidadeElement.innerText = "--";
+  iconeElement.removeAttribute("src");
+  iconeElement.alt = "";
+  condicaoElement.innerText = "Sem dados";
+  forecast.innerHTML = '<p class="forecast-status">Nenhuma previsao disponivel.</p>';
+  clearCharts();
+}
+
+function renderWeather(data) {
+  statusMessage.innerText = `Dados atualizados para ${data.cidade}.`;
+  statusMessage.className = "success";
+  tempElement.innerText = data.temp + " °C";
+  umidadeElement.innerText = data.umidade + " %";
+
+  iconeElement.src =
     "https://openweathermap.org/img/wn/" + data.icone + "@2x.png";
-  document.getElementById("icone").alt = data.condicao;
-  document.getElementById("condicao").innerText = data.condicao;
+  iconeElement.alt = data.condicao;
+  condicaoElement.innerText = data.condicao;
 
   let labels = [];
   let temps = [];
@@ -110,8 +182,6 @@ socket.onmessage = function (event) {
   humChart.data.datasets[0].data = hums;
   humChart.update();
 
-  const forecast = document.getElementById("forecast");
-
   forecast.innerHTML = "";
 
   data.dias.forEach((d) => {
@@ -127,19 +197,17 @@ socket.onmessage = function (event) {
 </div>
 `;
   });
-};
+}
 
-const cidadeInput = document.getElementById("cidade");
-const listaCidades = document.getElementById("lista-cidades");
+function clearCharts() {
+  tempChart.data.labels = [];
+  tempChart.data.datasets[0].data = [];
+  tempChart.update();
 
-socket.onopen = () => {
-  socket.send("Belo Horizonte");
-};
-
-cidadeInput.addEventListener("change", () => {
-  const cidade = cidadeInput.value;
-  socket.send(cidade);
-});
+  humChart.data.labels = [];
+  humChart.data.datasets[0].data = [];
+  humChart.update();
+}
 
 fetch("https://servicodados.ibge.gov.br/api/v1/localidades/municipios")
   .then((response) => response.json())
